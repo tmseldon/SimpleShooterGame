@@ -75,17 +75,24 @@ void AShooterCharacter::MoveAhead(const FInputActionValue& Value)
 		const FRotator CurrentRotation = ShooterController->GetControlRotation();
 		const FRotator YawRotation(0, CurrentRotation.Yaw, 0);
 	
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+		AddMovementInput(ForwardDirection, MovementVector.X);
+		AddMovementInput(RightDirection, MovementVector.Y);
 	}
 }
 
 void AShooterCharacter::LookUpBehavior(const struct FInputActionValue& Value)
 {
-	float MagnitudePitch = Value.Get<float>();
-	AddControllerPitchInput(MagnitudePitch);
+	// We get the 2D vector for the view
+	FVector2D ViewVector = Value.Get<FVector2D>();
+
+	if (ShooterController != nullptr)
+	{
+		// add yaw and pitch input to controller
+		AddControllerYawInput(ViewVector.X);
+		AddControllerPitchInput(ViewVector.Y);
+	}
 }
 
