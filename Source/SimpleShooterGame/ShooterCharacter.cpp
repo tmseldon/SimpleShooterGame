@@ -61,6 +61,9 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	{
 		EnhancedInputComponent->BindAction(MoveForward, ETriggerEvent::Triggered, this, &AShooterCharacter::MoveAhead);
 		EnhancedInputComponent->BindAction(LookUp, ETriggerEvent::Triggered, this, &AShooterCharacter::LookUpBehavior);
+
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	}
 
 }
