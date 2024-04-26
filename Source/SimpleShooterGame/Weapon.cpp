@@ -2,6 +2,7 @@
 
 
 #include "Weapon.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -35,3 +36,8 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
+
+void AWeapon::PullTrigger()
+{
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFX, MeshWeapon, TEXT("MuzzleFlashSocket"));
+}

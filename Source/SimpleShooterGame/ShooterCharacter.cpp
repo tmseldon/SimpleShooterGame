@@ -47,14 +47,23 @@ void AShooterCharacter::BeginPlay()
 	}
 
 	/*
+		Setting up mesh modifications
+		Removing the gun that comes with the character mesh
+	*/
+
+	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
+
+	/*
 		Weapon configuration section
 	*/
 
 	if (WeaponClass != nullptr)
 	{
 		WeaponCarried = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
+		WeaponCarried->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+		WeaponCarried->SetOwner(this);
+		WeaponCarried->AddActorLocalOffset(WeaponOffset);
 	}
-	
 }
 
 // Called every frame
@@ -73,11 +82,16 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	
 	if (EnhancedInputComponent != nullptr)
 	{
+		/* Move Actions*/
 		EnhancedInputComponent->BindAction(MoveForward, ETriggerEvent::Triggered, this, &AShooterCharacter::MoveAhead);
 		EnhancedInputComponent->BindAction(LookUp, ETriggerEvent::Triggered, this, &AShooterCharacter::LookUpBehavior);
 
+		/* Jumping Actions*/
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+
+		/* Shooting Actions*/
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AShooterCharacter::StartShooting);
 	}
 
 }
@@ -111,5 +125,16 @@ void AShooterCharacter::LookUpBehavior(const struct FInputActionValue& Value)
 		AddControllerYawInput(ViewVector.X);
 		AddControllerPitchInput(ViewVector.Y);
 	}
+}
+
+void AShooterCharacter::StartShooting(const struct FInputActionValue& Value)
+{
+	bool ShootStart = Value.Get<bool>();
+
+	if (ShootStart)
+	{
+		WeaponCarried->PullTrigger();
+	}
+
 }
 

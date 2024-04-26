@@ -27,6 +27,7 @@ protected:
 
 	void MoveAhead(const struct FInputActionValue& Value);
 	void LookUpBehavior(const struct FInputActionValue& Value);
+	void StartShooting(const struct FInputActionValue& Value);
 
 private:
 
@@ -42,8 +43,14 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* JumpAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ShootAction;
+
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
 	TSubclassOf<class AWeapon> WeaponClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	FVector WeaponOffset;
 
 	UPROPERTY()
 	class AWeapon* WeaponCarried;
