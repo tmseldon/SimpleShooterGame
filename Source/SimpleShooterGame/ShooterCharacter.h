@@ -42,6 +42,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* JumpAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+	TSubclassOf<class AWeapon> WeaponClass;
+
+	UPROPERTY()
+	class AWeapon* WeaponCarried;
 
 	APlayerController* ShooterController;
 };

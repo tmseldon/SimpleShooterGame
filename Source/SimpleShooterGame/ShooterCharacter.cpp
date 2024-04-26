@@ -5,6 +5,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Weapon.h"
 
 
 // Sets default values
@@ -19,6 +20,10 @@ AShooterCharacter::AShooterCharacter()
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	/*
+		Input configuration section
+	*/
 
 	ShooterController = Cast<APlayerController>(Controller);
 
@@ -39,6 +44,15 @@ void AShooterCharacter::BeginPlay()
 				InputSystem->AddMappingContext(InputShooterMapping, 0);
 			}
 		}
+	}
+
+	/*
+		Weapon configuration section
+	*/
+
+	if (WeaponClass != nullptr)
+	{
+		WeaponCarried = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
 	}
 	
 }
