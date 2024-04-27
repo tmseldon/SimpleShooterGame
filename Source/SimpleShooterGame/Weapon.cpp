@@ -2,6 +2,7 @@
 
 
 #include "Weapon.h"
+#include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -40,4 +41,29 @@ void AWeapon::Tick(float DeltaTime)
 void AWeapon::PullTrigger()
 {
 	UGameplayStatics::SpawnEmitterAttached(MuzzleFX, MeshWeapon, TEXT("MuzzleFlashSocket"));
+
+	/* 
+	Debug Section
+	We are getting the player viewport status to draw some debug cameras
+	*/
+	
+	APawn* PlayerPawn = Cast<APawn>(GetOwner());
+
+	if (PlayerPawn == nullptr)
+	{
+		return;
+	}
+
+	AController* PlayerOwnerController = PlayerPawn->GetController();
+
+	if (PlayerOwnerController == nullptr)
+	{
+		return;
+	}
+	
+	FVector PlayerLocation;
+	FRotator PlayerRotation;
+
+	PlayerOwnerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
+	DrawDebugCamera(GetWorld(), PlayerLocation, PlayerRotation, 90, 2, FColor::Red, true);
 }
