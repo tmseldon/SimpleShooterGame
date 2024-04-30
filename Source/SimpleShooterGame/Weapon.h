@@ -34,4 +34,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = FXs)
 	UParticleSystem* MuzzleFX;
 
+	UPROPERTY(EditAnywhere, Category = FXs)
+	UParticleSystem* ImpactBulletFX;
+
+	UPROPERTY(EDitAnywhere, Category = Debug)
+	float MaxRange = 1000;
 };

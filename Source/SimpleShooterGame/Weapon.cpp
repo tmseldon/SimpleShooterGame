@@ -65,5 +65,21 @@ void AWeapon::PullTrigger()
 	FRotator PlayerRotation;
 
 	PlayerOwnerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
-	DrawDebugCamera(GetWorld(), PlayerLocation, PlayerRotation, 90, 2, FColor::Red, true);
+	
+	/* Drawing Viewport Camera */
+	// DrawDebugCamera(GetWorld(), PlayerLocation, PlayerRotation, 90, 2, FColor::Red, true);
+
+	/* Drawing LineTrace */
+	FHitResult HitData;
+	UWorld* CurrentWorld = GetWorld();
+	FVector End = PlayerLocation + PlayerRotation.Vector() * MaxRange;
+
+	bool bHitDetected = CurrentWorld->LineTraceSingleByChannel(HitData, PlayerLocation, End, ECollisionChannel::ECC_GameTraceChannel1);
+	if (bHitDetected)
+	{
+		FVector ShotDirection = -PlayerRotation.Vector();
+		/*DrawDebugPoint(CurrentWorld, HitData.Location, 20, FColor::Red, true);*/
+		UGameplayStatics::SpawnEmitterAtLocation(CurrentWorld, ImpactBulletFX, HitData.Location, ShotDirection.Rotation());
+	}
+
 }
