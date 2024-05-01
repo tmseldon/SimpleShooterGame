@@ -37,6 +37,13 @@ private:
 	UPROPERTY(EditAnywhere, Category = FXs)
 	UParticleSystem* ImpactBulletFX;
 
-	UPROPERTY(EDitAnywhere, Category = Debug)
+	UPROPERTY(EditAnywhere, Category = Debug)
 	float MaxRange = 1000;
+
+	UPROPERTY(EditAnywhere, Category = WeaponParams)
+	float DamageValue = 10;
+
+	AController* PlayerOwnerController;
+
+	bool CheckAndSetOwnerConfig();
 };

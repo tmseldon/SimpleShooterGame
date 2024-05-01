@@ -3,6 +3,7 @@
 
 #include "Weapon.h"
 #include "DrawDebugHelpers.h"
+#include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -27,7 +28,8 @@ AWeapon::AWeapon()
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	CheckAndSetOwnerConfig();
 }
 
 // Called every frame
@@ -37,30 +39,41 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
+bool AWeapon::CheckAndSetOwnerConfig()
+{
+	APawn* PlayerPawn = Cast<APawn>(GetOwner());
+
+	if (PlayerPawn != nullptr)
+	{
+		PlayerOwnerController = PlayerPawn->GetController();
+		if (PlayerOwnerController != nullptr)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 
 void AWeapon::PullTrigger()
 {
 	UGameplayStatics::SpawnEmitterAttached(MuzzleFX, MeshWeapon, TEXT("MuzzleFlashSocket"));
 
+	if (PlayerOwnerController == nullptr)
+	{
+		bool bIsRetryConfig = CheckAndSetOwnerConfig();
+		if (bIsRetryConfig == false)
+		{
+			return;
+		}
+	}
+
 	/* 
 	Debug Section
 	We are getting the player viewport status to draw some debug cameras
 	*/
-	
-	APawn* PlayerPawn = Cast<APawn>(GetOwner());
 
-	if (PlayerPawn == nullptr)
-	{
-		return;
-	}
-
-	AController* PlayerOwnerController = PlayerPawn->GetController();
-
-	if (PlayerOwnerController == nullptr)
-	{
-		return;
-	}
-	
 	FVector PlayerLocation;
 	FRotator PlayerRotation;
 
@@ -80,6 +93,15 @@ void AWeapon::PullTrigger()
 		FVector ShotDirection = -PlayerRotation.Vector();
 		/*DrawDebugPoint(CurrentWorld, HitData.Location, 20, FColor::Red, true);*/
 		UGameplayStatics::SpawnEmitterAtLocation(CurrentWorld, ImpactBulletFX, HitData.Location, ShotDirection.Rotation());
+		
+		/* Section to define the damage to an enemy */
+		AActor* HittingActor = HitData.GetActor();
+
+		if (HittingActor != nullptr)
+		{
+			FPointDamageEvent DamageEvent = FPointDamageEvent(DamageValue, HitData, ShotDirection, nullptr);
+			HittingActor->TakeDamage(DamageValue, DamageEvent, PlayerOwnerController, this);
+		}
 	}
 
 }
