@@ -12,6 +12,9 @@ class SIMPLESHOOTERGAME_API AShooterCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintPure)
+	bool IsDead() const;
+
 	// Sets default values for this character's properties
 	AShooterCharacter();
 
@@ -20,6 +23,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -52,8 +57,16 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	FVector WeaponOffset;
 
+	UPROPERTY(EditDefaultsOnly, Category = Params, meta = (AllowPrivateAccess = "true"))
+	float HealthMax = 100;
+
+	UPROPERTY(VisibleAnywhere, Category = Params, meta = (AllowPrivateAccess = "true"))
+	float HealthCurrent;
+
 	UPROPERTY()
 	class AWeapon* WeaponCarried;
 
 	APlayerController* ShooterController;
+
+	bool isCharacterDead = false;
 };

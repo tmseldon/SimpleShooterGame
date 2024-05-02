@@ -22,6 +22,12 @@ void AShooterCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	/*
+		Health config
+	*/
+
+	HealthCurrent = HealthMax;
+
+	/*
 		Input configuration section
 	*/
 
@@ -138,3 +144,28 @@ void AShooterCharacter::StartShooting(const struct FInputActionValue& Value)
 
 }
 
+float AShooterCharacter::TakeDamage(
+	float DamageAmount, 
+	struct FDamageEvent const& DamageEvent, 
+	class AController* EventInstigator, 
+	AActor* DamageCauser) 
+{
+	float DamageToInflict = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	DamageToInflict = FMath::Min(HealthCurrent, DamageToInflict);
+	HealthCurrent -= DamageToInflict;
+
+	UE_LOG(LogTemp, Warning, TEXT("Damage received, current health: %f"), HealthCurrent);
+	
+	if (HealthCurrent <= 0)
+	{
+		isCharacterDead = true;
+	}
+
+	return DamageToInflict;
+}
+
+bool AShooterCharacter::IsDead() const
+{
+	return isCharacterDead;
+	// return HealthCurrent <= 0;
+}
