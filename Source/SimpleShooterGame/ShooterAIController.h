@@ -23,9 +23,13 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	//UPROPERTY(EditAnywhere, Category = Params, meta = (AllowPrivateAccess = "true"))
+	//float CloseRadius;
+
 	UPROPERTY(EditAnywhere, Category = Params, meta = (AllowPrivateAccess = "true"))
-	float CloseRadius;
+	UBehaviorTree* AIBehavior;
 
 	APawn* PlayerPawn;
+	UBlackboardComponent* BlackBoardReference;
 	
 };
