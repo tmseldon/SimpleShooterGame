@@ -42,7 +42,7 @@ void AShooterAIController::Tick(float DeltaTime)
 
 		//Setting PlayerLocation and LastKnowPos
 		BlackBoardReference->SetValueAsVector(TEXT("PlayerLocation"), PlayerPawn->GetActorLocation());
-		BlackBoardReference->SetValueAsVector(TEXT("LastKnownPos"), PlayerPawn->GetActorLocation());
+		BlackBoardReference->SetValueAsVector(TEXT("LastKnowingPos"), PlayerPawn->GetActorLocation());
 	}
 	else
 	{
