@@ -62,13 +62,22 @@ void AShooterCharacter::BeginPlay()
 	/*
 		Weapon configuration section
 	*/
+	SettingUpWeapon();
 
+}
+
+void AShooterCharacter::SettingUpWeapon()
+{
 	if (WeaponClass != nullptr)
 	{
 		WeaponCarried = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
 		WeaponCarried->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 		WeaponCarried->SetOwner(this);
 		WeaponCarried->AddActorLocalOffset(WeaponOffset);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Forgot to add the WeaponClass to this Character"));
 	}
 }
 
@@ -168,4 +177,21 @@ bool AShooterCharacter::IsDead() const
 {
 	return isCharacterDead;
 	// return HealthCurrent <= 0;
+}
+
+void AShooterCharacter::AIShoot()
+{
+	if (WeaponCarried == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Weapon for AI, trying setting up again Weapon"));
+		SettingUpWeapon();
+
+		if (WeaponCarried == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Didn't work"));
+			return;
+		}
+	}
+
+	WeaponCarried->PullTrigger();
 }

@@ -26,9 +26,15 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	// Shoot version for IA to be called externally
+	void AIShoot();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// For setting the weapon to this pawn
+	void SettingUpWeapon();
 
 	void MoveAhead(const struct FInputActionValue& Value);
 	void LookUpBehavior(const struct FInputActionValue& Value);
