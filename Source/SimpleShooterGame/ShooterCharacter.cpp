@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Weapon.h"
+#include "Components/CapsuleComponent.h"
 
 
 // Sets default values
@@ -165,9 +166,10 @@ float AShooterCharacter::TakeDamage(
 
 	UE_LOG(LogTemp, Warning, TEXT("Damage received, current health: %f"), HealthCurrent);
 	
-	if (HealthCurrent <= 0)
+	if (IsDead())
 	{
-		isCharacterDead = true;
+		DetachFromControllerPendingDestroy();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	return DamageToInflict;
@@ -175,8 +177,8 @@ float AShooterCharacter::TakeDamage(
 
 bool AShooterCharacter::IsDead() const
 {
-	return isCharacterDead;
-	// return HealthCurrent <= 0;
+	//return isCharacterDead;
+	 return HealthCurrent <= 0;
 }
 
 void AShooterCharacter::AIShoot()

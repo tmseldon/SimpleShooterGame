@@ -34,22 +34,17 @@ void AShooterAIController::Tick(float DeltaTime)
 	}
 
 	///* Chasing the player algorithm */
+	// NOTE: Moved to BT Service
 
-	if (LineOfSightTo(PlayerPawn))
-	{
-		//SetFocus(PlayerPawn);
-		//MoveToActor(PlayerPawn, CloseRadius);
-
-		//Setting PlayerLocation and LastKnowPos
-		BlackBoardReference->SetValueAsVector(TEXT("PlayerLocation"), PlayerPawn->GetActorLocation());
-		BlackBoardReference->SetValueAsVector(TEXT("LastKnowingPos"), PlayerPawn->GetActorLocation());
-	}
-	else
-	{
-		//ClearFocus(EAIFocusPriority::Gameplay);
-		//StopMovement();
-
-		//ClearPlayerLocation
-		BlackBoardReference->ClearValue(TEXT("PlayerLocation"));
-	}
+//	if (LineOfSightTo(PlayerPawn))
+//	{
+//		//Setting PlayerLocation and LastKnowPos
+//		BlackBoardReference->SetValueAsVector(TEXT("PlayerLocation"), PlayerPawn->GetActorLocation());
+//		BlackBoardReference->SetValueAsVector(TEXT("LastKnowingPos"), PlayerPawn->GetActorLocation());
+//	}
+//	else
+//	{
+//		//ClearPlayerLocation
+//		BlackBoardReference->ClearValue(TEXT("PlayerLocation"));
+//	}
 }

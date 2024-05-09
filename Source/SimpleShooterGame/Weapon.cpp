@@ -84,10 +84,16 @@ void AWeapon::PullTrigger()
 
 	/* Drawing LineTrace */
 	FHitResult HitData;
+
+	// To avoid bug where the AI can shoot itself because of the capsule collider
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this);
+	CollisionParams.AddIgnoredActor(GetOwner());
+
 	UWorld* CurrentWorld = GetWorld();
 	FVector End = PlayerLocation + PlayerRotation.Vector() * MaxRange;
 
-	bool bHitDetected = CurrentWorld->LineTraceSingleByChannel(HitData, PlayerLocation, End, ECollisionChannel::ECC_GameTraceChannel1);
+	bool bHitDetected = CurrentWorld->LineTraceSingleByChannel(HitData, PlayerLocation, End, ECollisionChannel::ECC_GameTraceChannel1, CollisionParams);
 	if (bHitDetected)
 	{
 		FVector ShotDirection = -PlayerRotation.Vector();
