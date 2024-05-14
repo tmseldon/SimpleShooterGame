@@ -18,11 +18,20 @@ public:
 
 	virtual void GameHasEnded(class AActor* EndGameFocus = nullptr, bool bIsWinner = false) override;
 
+protected:
+
+	virtual void BeginPlay() override;
+
 private:
+
+	UPROPERTY(EditAnywhere, Category = "Player Params")
+	TSubclassOf<class UUserWidget> GameOverScreenClass;
 
 	UPROPERTY(EditAnywhere, Category = "Player Params")
 	float RestartDelaySeconds = 5.f;
 
 	FTimerHandle RestartTimer;
+
+	UUserWidget* GameOverScreenWidget;
 	
 };
