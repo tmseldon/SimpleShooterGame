@@ -28,10 +28,13 @@ private:
 	TSubclassOf<class UUserWidget> GameOverScreenClass;
 
 	UPROPERTY(EditAnywhere, Category = "Player Params")
+	TSubclassOf<class UUserWidget> WinnerScreenClass;
+
+	UPROPERTY(EditAnywhere, Category = "Player Params")
 	float RestartDelaySeconds = 5.f;
 
 	FTimerHandle RestartTimer;
 
-	UUserWidget* GameOverScreenWidget;
+	//UUserWidget* GameOverScreenWidget;
 	
 };

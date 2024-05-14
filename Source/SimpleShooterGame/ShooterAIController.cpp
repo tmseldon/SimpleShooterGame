@@ -2,6 +2,7 @@
 
 
 #include "ShooterAIController.h"
+#include "ShooterCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -47,4 +48,16 @@ void AShooterAIController::Tick(float DeltaTime)
 //		//ClearPlayerLocation
 //		BlackBoardReference->ClearValue(TEXT("PlayerLocation"));
 //	}
+}
+
+bool AShooterAIController::IsDead() const
+{
+	AShooterCharacter* CurrentControlledCharacter = Cast<AShooterCharacter>(GetPawn());
+	if (CurrentControlledCharacter != nullptr)
+	{
+		return CurrentControlledCharacter->IsDead();
+	}
+
+	// If CurrentControlledCharacter could mean that the ShooterCharacter was dettached from this Controller
+	return true;
 }
