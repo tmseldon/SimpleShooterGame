@@ -59,47 +59,28 @@ bool AWeapon::CheckAndSetOwnerConfig()
 void AWeapon::PullTrigger()
 {
 	UGameplayStatics::SpawnEmitterAttached(MuzzleFX, MeshWeapon, TEXT("MuzzleFlashSocket"));
-
-	if (PlayerOwnerController == nullptr)
-	{
-		bool bIsRetryConfig = CheckAndSetOwnerConfig();
-		if (bIsRetryConfig == false)
-		{
-			return;
-		}
-	}
+	UGameplayStatics::SpawnSoundAttached(MuzzleSound, MeshWeapon, TEXT("MuzzleFlashSocket"));
 
 	/* 
 	Debug Section
 	We are getting the player viewport status to draw some debug cameras
 	*/
-
-	FVector PlayerLocation;
-	FRotator PlayerRotation;
-
-	PlayerOwnerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
 	
-	/* Drawing Viewport Camera */
-	// DrawDebugCamera(GetWorld(), PlayerLocation, PlayerRotation, 90, 2, FColor::Red, true);
+		/* Drawing Viewport Camera */
+		// DrawDebugCamera(GetWorld(), PlayerLocation, PlayerRotation, 90, 2, FColor::Red, true);
 
-	/* Drawing LineTrace */
+	/* Determine if line trace hits */
 	FHitResult HitData;
+	FVector ShotDirection;
+	bool bHitDetected = GunTrace(HitData, ShotDirection);
 
-	// To avoid bug where the AI can shoot itself because of the capsule collider
-	FCollisionQueryParams CollisionParams;
-	CollisionParams.AddIgnoredActor(this);
-	CollisionParams.AddIgnoredActor(GetOwner());
-
-	UWorld* CurrentWorld = GetWorld();
-	FVector End = PlayerLocation + PlayerRotation.Vector() * MaxRange;
-
-	bool bHitDetected = CurrentWorld->LineTraceSingleByChannel(HitData, PlayerLocation, End, ECollisionChannel::ECC_GameTraceChannel1, CollisionParams);
 	if (bHitDetected)
 	{
-		FVector ShotDirection = -PlayerRotation.Vector();
-		/*DrawDebugPoint(CurrentWorld, HitData.Location, 20, FColor::Red, true);*/
-		UGameplayStatics::SpawnEmitterAtLocation(CurrentWorld, ImpactBulletFX, HitData.Location, ShotDirection.Rotation());
 		
+		/*DrawDebugPoint(CurrentWorld, HitData.Location, 20, FColor::Red, true);*/
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactBulletFX, HitData.Location, ShotDirection.Rotation());
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactSound, HitData.Location);
+
 		/* Section to define the damage to an enemy */
 		AActor* HittingActor = HitData.GetActor();
 
@@ -110,4 +91,33 @@ void AWeapon::PullTrigger()
 		}
 	}
 
+}
+
+bool AWeapon::GunTrace(FHitResult& HitResultData, FVector& ShotDirection)
+{
+	if (PlayerOwnerController == nullptr)
+	{
+		bool bIsRetryConfig = CheckAndSetOwnerConfig();
+		if (bIsRetryConfig == false)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Problem setting the owner for this gun"));
+			return false;
+		}
+	}
+
+	FVector PlayerLocation;
+	FRotator PlayerRotation;
+
+	PlayerOwnerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
+
+	// To avoid bug where the AI can shoot itself because of the capsule collider
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this);
+	CollisionParams.AddIgnoredActor(GetOwner());
+
+	UWorld* CurrentWorld = GetWorld();
+	FVector End = PlayerLocation + PlayerRotation.Vector() * MaxRange;
+	ShotDirection = -PlayerRotation.Vector();
+
+	return CurrentWorld->LineTraceSingleByChannel(HitResultData, PlayerLocation, End, ECollisionChannel::ECC_GameTraceChannel1, CollisionParams);
 }

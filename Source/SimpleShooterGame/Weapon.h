@@ -37,6 +37,12 @@ private:
 	UPROPERTY(EditAnywhere, Category = FXs)
 	UParticleSystem* ImpactBulletFX;
 
+	UPROPERTY(EditAnywhere, Category = FXs)
+	USoundBase* MuzzleSound;
+
+	UPROPERTY(EditAnywhere, Category = FXs)
+	USoundBase* ImpactSound;
+
 	UPROPERTY(EditAnywhere, Category = Debug)
 	float MaxRange = 1000;
 
@@ -46,4 +52,6 @@ private:
 	AController* PlayerOwnerController;
 
 	bool CheckAndSetOwnerConfig();
+
+	bool GunTrace(FHitResult& HitResultData, FVector& ShotDirection);
 };
