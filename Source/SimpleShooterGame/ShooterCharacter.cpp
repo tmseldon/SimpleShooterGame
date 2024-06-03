@@ -195,6 +195,19 @@ bool AShooterCharacter::IsDead() const
 	 return HealthCurrent <= 0;
 }
 
+float AShooterCharacter::GetCurrentHealth() const
+{
+	if (HealthMax > 0)
+	{
+		return (float) HealthCurrent / (float) HealthMax;
+	}
+	else
+	{
+		return 0;
+	}
+	
+}
+
 void AShooterCharacter::AIShoot()
 {
 	if (WeaponCarried == nullptr)
