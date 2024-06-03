@@ -44,6 +44,9 @@ void AShooterCharacter::BeginPlay()
 
 	if (CurrentPlayer != nullptr)
 	{
+		bIsHumanPlayer = true;
+		OnSettingHumanity(HealthMax);
+
 		if (UEnhancedInputLocalPlayerSubsystem* InputSystem = CurrentPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 		{
 			// Loading the Input Mapping for the current player
@@ -165,7 +168,11 @@ float AShooterCharacter::TakeDamage(
 	DamageToInflict = FMath::Min(HealthCurrent, DamageToInflict);
 	HealthCurrent -= DamageToInflict;
 
-	UE_LOG(LogTemp, Warning, TEXT("Damage received, current health: %f"), HealthCurrent);
+	if (bIsHumanPlayer)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Damage received, current health: %f"), HealthCurrent);
+		OnDamage(HealthCurrent);
+	}
 	
 	if (IsDead())
 	{
@@ -184,7 +191,7 @@ float AShooterCharacter::TakeDamage(
 
 bool AShooterCharacter::IsDead() const
 {
-	//return isCharacterDead;
+	//return bisCharacterDead;
 	 return HealthCurrent <= 0;
 }
 

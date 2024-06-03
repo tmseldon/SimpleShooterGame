@@ -15,8 +15,9 @@ public class SimpleShooterGame : ModuleRules
 			"InputCore", 
 			"EnhancedInput", 
 			"GameplayTasks", 
-			"UMG"
-		});
+			"UMG",
+            "FieldNotification"
+        });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

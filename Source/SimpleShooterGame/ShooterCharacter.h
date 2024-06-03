@@ -15,6 +15,12 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSettingHumanity(float MaxHealth);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDamage(float CurrentHealth);
+
 	// Sets default values for this character's properties
 	AShooterCharacter();
 
@@ -74,5 +80,7 @@ private:
 
 	APlayerController* ShooterController;
 
-	bool isCharacterDead = false;
+	bool bIsCharacterDead = false;
+
+	bool bIsHumanPlayer = false;
 };

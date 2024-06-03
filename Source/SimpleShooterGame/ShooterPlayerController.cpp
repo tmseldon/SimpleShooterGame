@@ -7,16 +7,20 @@
 
 void AShooterPlayerController::BeginPlay()
 {
-	//if (GameOverScreenClass != nullptr)
-	//{
-	//	GameOverScreenWidget = CreateWidget(this, GameOverScreenClass, TEXT("GameOver Screen"));
-	//}
+	if (HUDClass != nullptr)
+	{
+		HUDScreenWidget = CreateWidget(this, HUDClass, TEXT("HUD Screen"));
+		HUDScreenWidget->AddToViewport();
+	}
 }
 
 
 void AShooterPlayerController::GameHasEnded(class AActor* EndGameFocus, bool bIsWinner)
 {
 	Super::GameHasEnded(EndGameFocus, bIsWinner);
+
+	HUDScreenWidget->SetVisibility(ESlateVisibility::Hidden);
+	//HUDScreenWidget->RemoveFromViewport();
 
 	if (bIsWinner)
 	{
