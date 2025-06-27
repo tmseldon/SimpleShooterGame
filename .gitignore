@@ -78,3 +78,5 @@ UpgradeLog.htm
 
 # Assets Packages
 Content/AssetPacks/*
+Content/UI/Fonts/Starjedi.uasset
+Content/UI/Fonts/Starjedi_Font.uasset

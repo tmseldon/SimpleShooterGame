@@ -149,12 +149,19 @@ void AShooterCharacter::LookUpBehavior(const struct FInputActionValue& Value)
 
 void AShooterCharacter::StartShooting(const struct FInputActionValue& Value)
 {
-	bool ShootStart = Value.Get<bool>();
+	/*bool ShootStart = Value.Get<bool>();*/
 
-	if (ShootStart)
-	{
-		WeaponCarried->PullTrigger();
-	}
+	WeaponCarried->PullTrigger();
+
+	// En UE 5.5 el manejo de threshold esta en el Input Mapping Actiion y no es 
+	// necesario hacerlo acá
+	//UE_LOG(LogTemp, Warning, TEXT("Starting the shoot"));
+
+	//if (ShootStart)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Shooting"));
+	//	WeaponCarried->PullTrigger();
+	//}
 
 }
 
